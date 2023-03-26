@@ -14,8 +14,10 @@ $ npm i @marianmeres/selection-store
 const store = createSelectionStore<T>(
     // initial collection of arbitrary objects
     items: T[] = [],  // e.g. [{ id: 'a' }, { id: 'b' }, { id: 'c' }],
+
     // initial set of selected indexes
     selected: number[] = [],
+
     // allow multiple selection flag
     multiple: boolean = false
 );
@@ -32,10 +34,10 @@ store.subscribe((v) => {
     // v.selection: T[];
 });
 
-// reset flag resets the selection to empty before applying the current one
+// reset flag empties the selection before applying the current one
 // (makes sense only for multiple, since non multiple are always reset)
 store.select(index, reset = true);
-store.select([index, index2], reset = true);
+store.select([index, index2, ...], reset = true);
 
 // "unselect"
 store.select([], reset = true);
