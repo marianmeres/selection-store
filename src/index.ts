@@ -57,16 +57,12 @@ export const createSelectionStore = <T>(
 	};
 
 	const _selectMany = (indexes: number[], reset) => {
-		//
 		if (!indexes.length) {
 			return reset ? _selected.set([]) : undefined;
 		}
-		//
 		if (!multiple) {
 			return _selectOne(indexes[indexes.length - 1], reset);
 		}
-
-		//
 		const _idxs = indexes.reduce((m, i) => [...m, ..._normalize(i)], []);
 		_selected.update((old) => (reset ? _uniq(_idxs) : _uniq([...old, ..._idxs])));
 	};
