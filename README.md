@@ -35,13 +35,16 @@ store.subscribe((v) => {
     // v.selection: T[];
 });
 
-// reset flag empties the selection before applying the current one
+// `resetSelected` flag empties the selection before applying the current one
 // (makes sense only for multiple, since non multiple are always reset)
-store.select(indexOrItem, reset = true);
-store.select([indexOrItem, indexOrItem2, ...], reset = true);
+store.select(indexOrItem, resetSelected = true);
+store.select([indexOrItem, indexOrItem2, ...], resetSelected = true);
 
 // "unselect"
-store.select([], reset = true);
+store.select([], resetSelected = true);
+store.unselect(); // will unselect all
+store.unselect(indexOrItem);
+store.unselect([indexOrItem, indexOrItem2, ...]);
 
 // helper to find index
 store.findIndexBy(propName, propValue);

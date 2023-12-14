@@ -72,12 +72,12 @@ export const createSelectionStore = <T>(
 		subscribe: store.subscribe,
 		get: store.get,
 		//
-		select: (indexOrItem: number | number[] | T | T[], reset = true) => {
+		select: (indexOrItem: number | number[] | T | T[], resetSelected = true) => {
 			let _values: (number | T)[] = Array.isArray(indexOrItem)
 				? indexOrItem
 				: [indexOrItem];
 
-			if (reset) _selected.set([]);
+			if (resetSelected) _selected.set([]);
 
 			let _indexes = [];
 			_values.forEach((v) => {
@@ -86,6 +86,34 @@ export const createSelectionStore = <T>(
 			});
 
 			_selectMany(_indexes, false);
+
+			return out;
+		},
+		//
+		unselect: (indexOrItem?: number | number[] | T | T[]) => {
+			// unselect all
+			if (indexOrItem === undefined) {
+				_selected.set([]);
+				return out;
+			}
+
+			const current = _selected.get();
+			if (!current.length) return out; // nothing to do
+
+			let _values: (number | T)[] = Array.isArray(indexOrItem)
+				? indexOrItem
+				: [indexOrItem];
+
+			let _indexesMap = current.reduce((m, i) => ({ ...m, [i]: true }), {});
+			_values.forEach((v) => {
+				if (typeof v !== 'number') v = _items.get().findIndex((_v) => _v === v);
+				delete _indexesMap[v];
+			});
+
+			_selectMany(
+				Object.keys(_indexesMap).map((v) => parseInt(v)),
+				true
+			);
 
 			return out;
 		},

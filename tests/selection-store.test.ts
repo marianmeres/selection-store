@@ -64,6 +64,23 @@ suite.test('not multiple', async () => {
 	assert(s.get().selection.length === 1);
 	assert(s.get().selection[0].id === 'c');
 
+	// noop, sice 0 is not selected
+	s.unselect(0);
+	assert(s.get().selected.length === 1);
+	assert(s.get().selection.length === 1);
+	assert(s.get().selection[0].id === 'c');
+
+	s.unselect(2);
+	assert(s.get().selected.length === 0);
+	assert(s.get().selection.length === 0);
+	assert(s.get().items.length === 3);
+
+	s.select(2);
+	s.unselect(); // unselect "all"
+	assert(s.get().selected.length === 0);
+	assert(s.get().selection.length === 0);
+	assert(s.get().items.length === 3);
+
 	s.reset();
 
 	assert(s.get().items.length === 0);
@@ -136,8 +153,19 @@ suite.test('multiple', async () => {
 	assert(s.get().selection.length === 2);
 	assert(s.get().selection.some((v) => v.id === 'c'));
 	assert(s.get().selection.some((v) => v.id === 'a'));
-	// clog(s.get());
 
+	s.select(1, false).unselect(c);
+	assert(s.get().selected.length === 2);
+	assert(s.get().selection.length === 2);
+	assert(s.get().selection.some((v) => v.id === 'b'));
+	assert(s.get().selection.some((v) => v.id === 'a'));
+
+	s.select([0, 1, 2]).unselect([a, c]);
+	assert(s.get().selected.length === 1);
+	assert(s.get().selection.length === 1);
+	assert(s.get().selection[0].id === 'b');
+
+	// clog(s.get());
 	unsub();
 });
 
