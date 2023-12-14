@@ -9,7 +9,7 @@ export declare const createSelectionStore: <T>(items: T[], selected?: number[], 
         selected: number[];
         selection: T[];
     };
-    select: (index: number | number[], reset?: boolean) => any;
+    select: (indexOrItem: number | T | T[] | number[], reset?: boolean) => any;
     findIndexBy: (propName: string, propValue: any) => number;
     reset: (items?: T[]) => any;
 };

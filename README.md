@@ -3,6 +3,7 @@
 Simple store utility for marking objects in collection as selected.
 
 ## Install
+
 ```shell
 $ npm i @marianmeres/selection-store
 ```
@@ -36,8 +37,8 @@ store.subscribe((v) => {
 
 // reset flag empties the selection before applying the current one
 // (makes sense only for multiple, since non multiple are always reset)
-store.select(index, reset = true);
-store.select([index, index2, ...], reset = true);
+store.select(indexOrItem, reset = true);
+store.select([indexOrItem, indexOrItem2, ...], reset = true);
 
 // "unselect"
 store.select([], reset = true);

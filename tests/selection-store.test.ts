@@ -9,7 +9,9 @@ const clog = createClog(path.basename(fileURLToPath(import.meta.url)));
 const suite = new TestRunner(path.basename(fileURLToPath(import.meta.url)));
 
 suite.test('not multiple', async () => {
-	const s = createSelectionStore([{ id: 'a' }, { id: 'b' }, { id: 'c' }]);
+	const a = { id: 'a' };
+	const c = { id: 'c' };
+	const s = createSelectionStore([a, { id: 'b' }, c]);
 
 	const unsub = s.subscribe((v) => {});
 
@@ -45,6 +47,23 @@ suite.test('not multiple', async () => {
 	assert(s.get().selection.length === 1);
 	assert(s.get().selection[0].id === 'a');
 
+	// selectItem
+	s.select(c, true);
+	assert(s.get().selected.length === 1);
+	assert(s.get().selection.length === 1);
+	assert(s.get().selection[0].id === 'c');
+
+	// must not work, since this is another instance
+	s.select({ id: 'a' }, true);
+	assert(s.get().selected.length === 0);
+	assert(s.get().selection.length === 0);
+
+	// only the last one will be selected
+	s.select([a, a, c], true);
+	assert(s.get().selected.length === 1);
+	assert(s.get().selection.length === 1);
+	assert(s.get().selection[0].id === 'c');
+
 	s.reset();
 
 	assert(s.get().items.length === 0);
@@ -55,7 +74,9 @@ suite.test('not multiple', async () => {
 });
 
 suite.test('multiple', async () => {
-	const s = createSelectionStore([{ id: 'a' }, { id: 'b' }, { id: 'c' }], [1], true);
+	const a = { id: 'a' };
+	const c = { id: 'c' };
+	const s = createSelectionStore([a, { id: 'b' }, c], [1], true);
 
 	const unsub = s.subscribe((v) => {});
 
@@ -109,6 +130,12 @@ suite.test('multiple', async () => {
 	assert(s.get().selection.length === 1);
 	assert(s.get().selection[0].id === 'b');
 
+	// select by item (same multiple will be ignored)
+	s.select([a, a, c], true);
+	assert(s.get().selected.length === 2);
+	assert(s.get().selection.length === 2);
+	assert(s.get().selection.some((v) => v.id === 'c'));
+	assert(s.get().selection.some((v) => v.id === 'a'));
 	// clog(s.get());
 
 	unsub();

@@ -72,8 +72,21 @@ export const createSelectionStore = <T>(
 		subscribe: store.subscribe,
 		get: store.get,
 		//
-		select: (index: number | number[], reset = true) => {
-			Array.isArray(index) ? _selectMany(index, reset) : _selectOne(index, reset);
+		select: (indexOrItem: number | number[] | T | T[], reset = true) => {
+			let _values: (number | T)[] = Array.isArray(indexOrItem)
+				? indexOrItem
+				: [indexOrItem];
+
+			if (reset) _selected.set([]);
+
+			let _indexes = [];
+			_values.forEach((v) => {
+				if (typeof v !== 'number') v = _items.get().findIndex((_v) => _v === v);
+				if (v >= 0) _indexes.push(v);
+			});
+
+			_selectMany(_indexes, false);
+
 			return out;
 		},
 		//
