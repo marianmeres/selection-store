@@ -54,3 +54,6 @@ store.select(store.findIndexBy('id', 'a'));
 // resets selection and internal collection of objects
 store.reset(items = []);
 ```
+
+Note: If your collection is huge, working with numerical indexes (see `indexOrItem` above)
+should be preferred.
